@@ -19,6 +19,9 @@ from nltk.stem import PorterStemmer
 from nltk.tokenize import sent_tokenize, word_tokenize
 from nltk.corpus import stopwords 
 from nltk.corpus import words
+from nltk.corpus import wordnet
+
+import re
 
 
 
@@ -32,6 +35,7 @@ def driver_tokenize():
  path = "mobydick"
  tokens = tokenize(path)
  print(tokens)
+
 
 
 def driver_spellchecker():
@@ -48,10 +52,10 @@ def driver_spellchecker():
 def spell_checker(dict_tokens):
     misspelled = []
     dict_words = {}
-    dict_words=loadintodictionary(words.words())
+    #dict_words=loadintodictionary(words.words())
     
     for word in dict_tokens:
-        if word not in dict_words:
+        if word not in allwords:
             misspelled.append(word)
     print(misspelled)
     return misspelled
@@ -63,10 +67,17 @@ def tokenize(path):
   for fname in files:
     with open(fname) as f: #file
       for line in f:
-         tokens= tokens + nltk.word_tokenize(line)
+          line=re.sub('[^A-Za-z]+',' ', line)
+          line_tokens = nltk.word_tokenize(line)
+          #for eachtoken in line_tokens:
+              #tokens = tokens + eachtoken.strip().split("-")
+          tokens= tokens + line_tokens
   
   return tokens
 
+
+
+# for loading mobydick tokens into python dictionary  
 def loadintodictionary(text):
     dict_words = {}
     for word in text:
@@ -75,11 +86,34 @@ def loadintodictionary(text):
             dict_words[w]= w
     return dict_words
     
+def line_proc(line):
+    return nltk.word_tokenize(line)
+  
+def driver_stripsplit(txt):
+    re.sub('[^A-Za-z0-9]+',' ', txt)
+    print(txt)
 
+def getDictionary(fname):
+    dict_words = {}
+    text= open(fname,"r")
+    for word in text:
+        dict_words[word]=word
+    return dict_words
+  
 def main():
     
- driver_spellchecker()
-
+ #driver_spellchecker()
+ #inpath= "ExtraCorpus"
+ #outpath = "f"
+ #names=[]
+ #names = getfilenames()
+ #print(names)
+ #make_dictionary(names,outpath)
+ #txt = "sand-hills"
+ #driver_stripsplit(txt)
+ dict_words = {}
+ fname = "dictionary.txt"
+ dict_words = getDictionary(fname)
  
  
  
